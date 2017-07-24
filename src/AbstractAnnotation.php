@@ -79,7 +79,10 @@ abstract class AbstractAnnotation
     protected function assertKey(string $key = 'value')
     {
         if (!isset($this->data[$key])) {
-            throw new RuntimeException(sprintf('Key "%s" not found in annotation data', $key));
+            throw new RuntimeException(sprintf(
+                'Default value not provided for %s annotation',
+                static::class
+            ));
         }
     }
 }

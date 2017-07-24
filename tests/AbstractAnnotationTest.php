@@ -17,7 +17,7 @@ class AbstractAnnotationTest extends PHPUnit_Framework_TestCase
         try {
             new BaseClassAnnotation([]);
         } catch (RuntimeException $exception) {
-            self::assertSame('Key "value" not found in annotation data', $exception->getMessage());
+            self::assertSame('Default value not provided for Tebru\AnnotationReader\Test\Mock\Annotation\BaseClassAnnotation annotation', $exception->getMessage());
             return;
         }
 
