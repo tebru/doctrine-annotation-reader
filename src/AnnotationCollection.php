@@ -73,7 +73,6 @@ class AnnotationCollection implements IteratorAggregate, Countable
      *
      * @param string $name
      * @return AbstractAnnotation|null
-     * @throws \RuntimeException
      */
     public function get(string $name): ?AbstractAnnotation
     {
@@ -93,7 +92,6 @@ class AnnotationCollection implements IteratorAggregate, Countable
      *
      * @param string $name
      * @return AbstractAnnotation[]|null
-     * @throws \RuntimeException
      */
     public function getAll(string $name): ?array
     {
@@ -148,7 +146,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
     public function addArray(array $annotations)
     {
         foreach ($annotations as $annotation) {
-            $this->add($annotation);
+            $this->doAdd($annotation);
         }
     }
 
@@ -163,15 +161,13 @@ class AnnotationCollection implements IteratorAggregate, Countable
     public function addCollection(AnnotationCollection $collection): void
     {
         foreach ($collection as $element) {
-            if ($element instanceof AbstractAnnotation) {
-                $this->add($element);
+            if (is_array($element)) {
+                $this->addArray($element);
+
                 continue;
             }
 
-            /** @var AbstractAnnotation[] $element */
-            foreach ($element as $annotation) {
-                $this->add($annotation);
-            }
+            $this->doAdd($element);
         }
     }
 
@@ -197,15 +193,27 @@ class AnnotationCollection implements IteratorAggregate, Countable
 
     /**
      * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
-     * @since 5.1.0
+     *
+     * @return int
      */
     public function count()
     {
         return count($this->annotations);
+    }
+
+    /**
+     * Internal method to add an annotation
+     *
+     * Ignore the annotation if not the correct type
+     *
+     * @param $annotation
+     */
+    private function doAdd($annotation)
+    {
+        if (!$annotation instanceof AbstractAnnotation) {
+            return;
+        }
+
+        $this->add($annotation);
     }
 }

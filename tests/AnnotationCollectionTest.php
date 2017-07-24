@@ -101,6 +101,14 @@ class AnnotationCollectionTest extends PHPUnit_Framework_TestCase
         self::assertSame('bar', $annotations[1]->getValue());
     }
 
+    public function testAddNonAbstractAnnotation()
+    {
+        $this->collection->addArray([new BaseClassAnnotation(['value' => 'foo']), new \stdClass()]);
+
+        self::assertCount(1, $this->collection);
+        self::assertSame('foo', $this->collection->get(BaseClassAnnotation::class)->getValue());
+    }
+
     public function testGetNotExists()
     {
         $this->collection->add(new BaseClassAnnotation(['value' => 'foo']));

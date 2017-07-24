@@ -24,7 +24,6 @@ abstract class AbstractAnnotation
      * Constructor
      *
      * @param array $data
-     * @throws \RuntimeException
      */
     final public function __construct(array $data)
     {
@@ -35,8 +34,6 @@ abstract class AbstractAnnotation
 
     /**
      * Initialize annotation data
-     *
-     * @throws \RuntimeException
      */
     protected function init(): void
     {
@@ -66,8 +63,6 @@ abstract class AbstractAnnotation
 
     /**
      * Get the default value
-     *
-     * @throws \RuntimeException
      */
     public function getValue()
     {
@@ -80,7 +75,6 @@ abstract class AbstractAnnotation
      * Assert that the key exists in the data array
      *
      * @param string $key
-     * @throws \RuntimeException
      */
     protected function assertKey(string $key = 'value')
     {
