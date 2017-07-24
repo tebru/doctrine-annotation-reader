@@ -1,0 +1,30 @@
+{
+    "name": "tebru/doctrine-annotation-reader",
+    "description": "Provides a cleaner API for reading Doctrine annotations",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nate Brunette",
+            "email": "n@tebru.net"
+        }
+    ],
+    "require": {
+        "php": ">= 7.1",
+        "doctrine/annotations": "^1.2",
+        "doctrine/cache": "^1.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tebru\\AnnotationReader\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tebru\\AnnotationReader\\Test\\": "tests/"
+        }
+    }
+}
