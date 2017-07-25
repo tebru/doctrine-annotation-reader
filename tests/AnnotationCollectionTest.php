@@ -34,25 +34,28 @@ class AnnotationCollectionTest extends PHPUnit_Framework_TestCase
 
     public function testAddSingle()
     {
-        $this->collection->add(new BaseClassAnnotation(['value' => 'foo']));
+        $added = $this->collection->add(new BaseClassAnnotation(['value' => 'foo']));
 
+        self::assertTrue($added);
         self::assertSame('foo', $this->collection->get(BaseClassAnnotation::class)->getValue());
     }
 
     public function testAddMultipleNotAllowed()
     {
         $this->collection->add(new BaseClassAnnotation(['value' => 'foo']));
-        $this->collection->add(new BaseClassAnnotation(['value' => 'bar']));
+        $added = $this->collection->add(new BaseClassAnnotation(['value' => 'bar']));
 
+        self::assertFalse($added);
         self::assertSame('foo', $this->collection->get(BaseClassAnnotation::class)->getValue());
     }
 
     public function testAddMultiple()
     {
         $this->collection->add(new MultipleAllowedAnnotation(['value' => 'foo']));
-        $this->collection->add(new MultipleAllowedAnnotation(['value' => 'bar']));
+        $added = $this->collection->add(new MultipleAllowedAnnotation(['value' => 'bar']));
         $annotations = $this->collection->getAll(MultipleAllowedAnnotation::class);
 
+        self::assertTrue($added);
         self::assertSame('foo', $annotations[0]->getValue());
         self::assertSame('bar', $annotations[1]->getValue());
     }
@@ -103,9 +106,10 @@ class AnnotationCollectionTest extends PHPUnit_Framework_TestCase
 
     public function testAddNonAbstractAnnotation()
     {
-        $this->collection->addArray([new BaseClassAnnotation(['value' => 'foo']), new \stdClass()]);
+        $added = $this->collection->addArray([new BaseClassAnnotation(['value' => 'foo']), new MultipleAllowedAnnotation(['value' => 'foo']), new \stdClass()]);
 
-        self::assertCount(1, $this->collection);
+        self::assertSame(2, $added);
+        self::assertCount(2, $this->collection);
         self::assertSame('foo', $this->collection->get(BaseClassAnnotation::class)->getValue());
     }
 
@@ -149,6 +153,70 @@ class AnnotationCollectionTest extends PHPUnit_Framework_TestCase
         }
 
         self::assertTrue(false);
+    }
+
+    public function testRemoveAnnotation()
+    {
+        $annotation = new BaseClassAnnotation(['value' => 'foo']);
+        $this->collection->add($annotation);
+        $removed = $this->collection->remove($annotation->getName());
+
+        self::assertSame($annotation, $removed);
+    }
+
+    public function testRemoveAllAnnotations()
+    {
+        $annotations = [new MultipleAllowedAnnotation(['value' => 'foo']), new MultipleAllowedAnnotation(['value' => 'foo'])];
+        $this->collection->addArray($annotations);
+        $removed = $this->collection->removeAll(MultipleAllowedAnnotation::class);
+
+        self::assertSame($annotations, $removed);
+    }
+
+    public function testRemoveAnnotationThrowsException()
+    {
+        $this->collection->add(new BaseClassAnnotation(['value' => 'foo']));
+
+        try {
+            $this->collection->removeAll(BaseClassAnnotation::class);
+        } catch (RuntimeException $exception) {
+            self::assertSame('Only one annotation available for "Tebru\AnnotationReader\Test\Mock\Annotation\BaseClassAnnotation". Use remove() instead.', $exception->getMessage());
+            return;
+        }
+
+        self::assertTrue(false);
+    }
+
+    public function testRemoveArrayThrowsException()
+    {
+        $this->collection->add(new MultipleAllowedAnnotation(['value' => 'foo']));
+
+        try {
+            $this->collection->remove(MultipleAllowedAnnotation::class);
+        } catch (RuntimeException $exception) {
+            self::assertSame('Multiple values available for "Tebru\AnnotationReader\Test\Mock\Annotation\MultipleAllowedAnnotation". Use removeAll() instead.', $exception->getMessage());
+            return;
+        }
+
+        self::assertTrue(false);
+    }
+
+    public function testRemoveAnnotationNotExists()
+    {
+        $annotation = new BaseClassAnnotation(['value' => 'foo']);
+        $this->collection->add($annotation);
+        $removed = $this->collection->remove('foo');
+
+        self::assertNull($removed);
+    }
+
+    public function testRemoveAllAnnotationsNotExists()
+    {
+        $annotations = [new MultipleAllowedAnnotation(['value' => 'foo']), new MultipleAllowedAnnotation(['value' => 'foo'])];
+        $this->collection->addArray($annotations);
+        $removed = $this->collection->removeAll('foo');
+
+        self::assertNull($removed);
     }
 
     public function testCount()

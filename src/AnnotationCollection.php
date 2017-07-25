@@ -37,7 +37,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      * @param array $annotations
      * @return AnnotationCollection
      */
-    public static function createFromArray(array $annotations)
+    public static function createFromArray(array $annotations): AnnotationCollection
     {
         $collection = new AnnotationCollection();
         $collection->addArray($annotations);
@@ -51,7 +51,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      * @param AnnotationCollection $annotations
      * @return AnnotationCollection
      */
-    public static function createFromCollection(AnnotationCollection $annotations)
+    public static function createFromCollection(AnnotationCollection $annotations): AnnotationCollection
     {
         $collection = new AnnotationCollection();
         $collection->addCollection($annotations);
@@ -113,21 +113,24 @@ class AnnotationCollection implements IteratorAggregate, Countable
      *
      * If multiple annotations of this type are allowed, store in array
      *
+     * Returns true if the annotation was added
+     *
      * @param AbstractAnnotation $annotation
+     * @return bool
      */
-    public function add(AbstractAnnotation $annotation): void
+    public function add(AbstractAnnotation $annotation): bool
     {
         $allowMultiple = $annotation->allowMultiple();
         $name = $annotation->getName();
         $exists = $this->exists($name);
 
         if (!$allowMultiple && $exists) {
-            return;
+            return false;
         }
 
         if (!$allowMultiple) {
             $this->annotations[$name] = $annotation;
-            return;
+            return true;
         }
 
         if (!$exists) {
@@ -135,6 +138,58 @@ class AnnotationCollection implements IteratorAggregate, Countable
         }
 
         $this->annotations[$name][] = $annotation;
+
+        return true;
+    }
+
+    /**
+     * Remove an annotation by name
+     *
+     * Returns the annotation removed or null
+     *
+     * @param string $name
+     * @return null|AbstractAnnotation
+     */
+    public function remove(string $name): ?AbstractAnnotation
+    {
+        if (!$this->exists($name)) {
+            return null;
+        }
+
+        try {
+            $annotation = $this->get($name);
+        } catch (RuntimeException $exception) {
+            throw new RuntimeException(sprintf('Multiple values available for "%s". Use removeAll() instead.', $name));
+        }
+
+        unset($this->annotations[$name]);
+
+        return $annotation;
+    }
+
+    /**
+     * Remove all annotations by name
+     *
+     * Returns the array of annotations removed or null
+     *
+     * @param string $name
+     * @return null|array
+     */
+    public function removeAll(string $name): ?array
+    {
+        if (!$this->exists($name)) {
+            return null;
+        }
+
+        try {
+            $annotations = $this->getAll($name);
+        } catch (RuntimeException $exception) {
+            throw new RuntimeException(sprintf('Only one annotation available for "%s". Use remove() instead.', $name));
+        }
+
+        unset($this->annotations[$name]);
+
+        return $annotations;
     }
 
     /**
@@ -144,12 +199,16 @@ class AnnotationCollection implements IteratorAggregate, Countable
      * not allowed will be ignored
      *
      * @param AbstractAnnotation[] $annotations
+     * @return int Number added
      */
-    public function addArray(array $annotations)
+    public function addArray(array $annotations): int
     {
+        $added = 0;
         foreach ($annotations as $annotation) {
-            $this->doAdd($annotation);
+            $added += (int)$this->doAdd($annotation);
         }
+
+        return $added;
     }
 
     /**
@@ -159,18 +218,22 @@ class AnnotationCollection implements IteratorAggregate, Countable
      * not allowed will be ignored
      *
      * @param AnnotationCollection $collection
+     * @return int Number added
      */
-    public function addCollection(AnnotationCollection $collection): void
+    public function addCollection(AnnotationCollection $collection): int
     {
+        $added = 0;
         foreach ($collection as $element) {
             if (is_array($element)) {
-                $this->addArray($element);
+                $added += $this->addArray($element);
 
                 continue;
             }
 
-            $this->doAdd($element);
+            $added += (int)$this->doAdd($element);
         }
+
+        return $added;
     }
 
     /**
@@ -178,7 +241,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->annotations;
     }
@@ -188,7 +251,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      *
      * @return Traversable
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->annotations);
     }
@@ -198,7 +261,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->annotations);
     }
@@ -208,14 +271,15 @@ class AnnotationCollection implements IteratorAggregate, Countable
      *
      * Ignore the annotation if not the correct type
      *
-     * @param $annotation
+     * @param mixed $annotation
+     * @return bool
      */
-    private function doAdd($annotation)
+    private function doAdd($annotation): bool
     {
         if (!$annotation instanceof AbstractAnnotation) {
-            return;
+            return false;
         }
 
-        $this->add($annotation);
+        return $this->add($annotation);
     }
 }
