@@ -34,8 +34,8 @@ class AnnotationReaderCacheTest extends PHPUnit_Framework_TestCase
     public function testReadClassUsesCache()
     {
         $annotation = new BaseClassAnnotation(['value' => 'foo']);
-        $this->cache->set('annotationreader.foo', [BaseClassAnnotation::class => $annotation]);
-        $result = $this->reader->readClass('foo', false)->get(BaseClassAnnotation::class);
+        $this->cache->set('annotationreader.FooBar', [BaseClassAnnotation::class => $annotation]);
+        $result = $this->reader->readClass('Foo\Bar', false)->get(BaseClassAnnotation::class);
 
         self::assertEquals($annotation, $result);
     }
@@ -43,8 +43,8 @@ class AnnotationReaderCacheTest extends PHPUnit_Framework_TestCase
     public function testReadMethodUsesCache()
     {
         $annotation = new BaseClassAnnotation(['value' => 'foo']);
-        $this->cache->set('annotationreader.foofoo', [BaseClassAnnotation::class => $annotation]);
-        $result = $this->reader->readMethod('foo', 'foo', false, false)->get(BaseClassAnnotation::class);
+        $this->cache->set('annotationreader.FooBarfoo', [BaseClassAnnotation::class => $annotation]);
+        $result = $this->reader->readMethod('foo', 'Foo\Bar', false, false)->get(BaseClassAnnotation::class);
 
         self::assertEquals($annotation, $result);
     }
@@ -52,8 +52,8 @@ class AnnotationReaderCacheTest extends PHPUnit_Framework_TestCase
     public function testReadPropertyUsesCache()
     {
         $annotation = new BaseClassAnnotation(['value' => 'foo']);
-        $this->cache->set('annotationreader.foofoo', [BaseClassAnnotation::class => $annotation]);
-        $result = $this->reader->readProperty('foo', 'foo', false, false)->get(BaseClassAnnotation::class);
+        $this->cache->set('annotationreader.FooBarfoo', [BaseClassAnnotation::class => $annotation]);
+        $result = $this->reader->readProperty('foo', 'Foo\Bar', false, false)->get(BaseClassAnnotation::class);
 
         self::assertEquals($annotation, $result);
     }
