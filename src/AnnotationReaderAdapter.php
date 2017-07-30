@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Tebru\AnnotationReader;
 
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Cache\CacheProvider;
+use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 
 /**
@@ -28,7 +28,7 @@ class AnnotationReaderAdapter
     private $reader;
 
     /**
-     * @var CacheProvider
+     * @var CacheInterface
      */
     private $cache;
 
@@ -36,9 +36,9 @@ class AnnotationReaderAdapter
      * Constructor
      *
      * @param Reader $reader
-     * @param CacheProvider $cache
+     * @param CacheInterface $cache
      */
-    public function __construct(Reader $reader, CacheProvider $cache)
+    public function __construct(Reader $reader, CacheInterface $cache)
     {
         $this->reader = $reader;
         $this->cache = $cache;
@@ -56,9 +56,9 @@ class AnnotationReaderAdapter
      */
     public function readClass(string $className, bool $useParent): AnnotationCollection
     {
-        $result = $this->cache->fetch($className);
-        if ($result !== false) {
-             return AnnotationCollection::createFromArray($result);
+        $key = 'annotationreader.'.$className;
+        if ($this->cache->has($key)) {
+             return AnnotationCollection::createFromArray($this->cache->get($key));
         }
 
         $reflectionClass = new ReflectionClass($className);
@@ -76,7 +76,7 @@ class AnnotationReaderAdapter
             $collection->addCollection($this->readClass($parent->getName(), true));
         }
 
-        $this->cache->save($className, $collection->toArray());
+        $this->cache->set($key, $collection->toArray());
 
         return $collection;
     }
@@ -95,9 +95,9 @@ class AnnotationReaderAdapter
      */
     public function readMethod(string $methodName, string $className, bool $useClass, bool $useParent): AnnotationCollection
     {
-        $result = $this->cache->fetch($className.$methodName);
-        if ($result !== false) {
-            return AnnotationCollection::createFromArray($result);
+        $key = 'annotationreader.'.$className.$methodName;
+        if ($this->cache->has($key)) {
+            return AnnotationCollection::createFromArray($this->cache->get($key));
         }
 
         $collection = new AnnotationCollection();
@@ -128,7 +128,7 @@ class AnnotationReaderAdapter
             }
         }
 
-        $this->cache->save($className.$methodName, $collection->toArray());
+        $this->cache->set($key, $collection->toArray());
 
         return $collection;
     }
@@ -147,9 +147,9 @@ class AnnotationReaderAdapter
      */
     public function readProperty(string $propertyName, string $className, bool $useClass, bool $useParent): AnnotationCollection
     {
-        $result = $this->cache->fetch($className.$propertyName);
-        if ($result !== false) {
-            return AnnotationCollection::createFromArray($result);
+        $key = 'annotationreader.'.$className.$propertyName;
+        if ($this->cache->has($key)) {
+            return AnnotationCollection::createFromArray($this->cache->get($key));
         }
 
         $collection = new AnnotationCollection();
@@ -180,7 +180,7 @@ class AnnotationReaderAdapter
             }
         }
 
-        $this->cache->save($className.$propertyName, $collection->toArray());
+        $this->cache->set($key, $collection->toArray());
 
         return $collection;
     }

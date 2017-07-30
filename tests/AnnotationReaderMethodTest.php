@@ -7,8 +7,8 @@
 namespace Tebru\AnnotationReader\Test;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Cache\VoidCache;
 use PHPUnit_Framework_TestCase;
+use Symfony\Component\Cache\Simple\NullCache;
 use Tebru\AnnotationReader\AnnotationCollection;
 use Tebru\AnnotationReader\AnnotationReaderAdapter;
 use Tebru\AnnotationReader\Test\Mock\Annotation\AbstractParentClassAnnotation;
@@ -33,7 +33,7 @@ class AnnotationReaderMethodTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->reader = new AnnotationReaderAdapter(new AnnotationReader(), new VoidCache());
+        $this->reader = new AnnotationReaderAdapter(new AnnotationReader(), new NullCache());
     }
 
     /**
