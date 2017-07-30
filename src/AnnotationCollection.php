@@ -272,14 +272,18 @@ class AnnotationCollection implements IteratorAggregate, Countable
      * Ignore the annotation if not the correct type
      *
      * @param mixed $annotation
-     * @return bool
+     * @return int
      */
-    private function doAdd($annotation): bool
+    private function doAdd($annotation): int
     {
-        if (!$annotation instanceof AbstractAnnotation) {
-            return false;
+        if (is_array($annotation)) {
+            return $this->addArray($annotation);
         }
 
-        return $this->add($annotation);
+        if (!$annotation instanceof AbstractAnnotation) {
+            return 0;
+        }
+
+        return (int)$this->add($annotation);
     }
 }

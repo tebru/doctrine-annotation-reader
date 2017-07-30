@@ -89,6 +89,19 @@ class AnnotationCollectionTest extends PHPUnit_Framework_TestCase
         self::assertSame('foo', $this->collection->get(BaseClassAnnotation::class)->getValue());
     }
 
+    public function testCreateMultipleFromCollectionArray()
+    {
+        $this->collection->addArray([
+            new MultipleAllowedAnnotation(['value' => 'foo']),
+            new MultipleAllowedAnnotation(['value' => 'bar'])
+        ]);
+        $collection = AnnotationCollection::createFromArray($this->collection->toArray());
+        $annotations = $collection->getAll(MultipleAllowedAnnotation::class);
+
+        self::assertSame('foo', $annotations[0]->getValue());
+        self::assertSame('bar', $annotations[1]->getValue());
+    }
+
     public function testCreateMultipleFromCollection()
     {
         $this->collection = AnnotationCollection::createFromCollection(
