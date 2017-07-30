@@ -23,6 +23,11 @@ abstract class AbstractAnnotation
     protected $data;
 
     /**
+     * @var mixed
+     */
+    protected $value;
+
+    /**
      * Constructor
      *
      * @param array $data
@@ -68,6 +73,10 @@ abstract class AbstractAnnotation
      */
     public function getValue()
     {
+        if ($this->value !== null) {
+            return $this->value;
+        }
+
         $this->assertKey();
 
         return $this->data['value'];

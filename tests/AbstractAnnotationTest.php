@@ -9,6 +9,7 @@ namespace Tebru\AnnotationReader\Test;
 use PHPUnit_Framework_TestCase;
 use RuntimeException;
 use Tebru\AnnotationReader\Test\Mock\Annotation\BaseClassAnnotation;
+use Tebru\AnnotationReader\Test\Mock\Annotation\ValueOverridingAnnotation;
 
 class AbstractAnnotationTest extends PHPUnit_Framework_TestCase
 {
@@ -22,5 +23,12 @@ class AbstractAnnotationTest extends PHPUnit_Framework_TestCase
         }
 
         self::assertTrue(false);
+    }
+
+    public function testCanOverrideValue()
+    {
+        $annotation = new ValueOverridingAnnotation(['foo' => 'bar']);
+
+        self::assertSame('bar', $annotation->getValue());
     }
 }
