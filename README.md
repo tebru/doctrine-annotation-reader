@@ -2,7 +2,7 @@ Doctrine Annotation Reader
 ==========================
 
 This library wraps a Doctrine annotation reader in order to provide
-a cleaner interface to parsing class an interface annotations.
+a cleaner interface to parsing class and interface annotations.
 
 AbstractAnnotation
 ------------------
