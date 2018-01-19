@@ -39,7 +39,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      */
     public static function createFromArray(array $annotations): AnnotationCollection
     {
-        $collection = new AnnotationCollection();
+        $collection = new static();
         $collection->addArray($annotations);
 
         return $collection;
@@ -53,7 +53,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      */
     public static function createFromCollection(AnnotationCollection $annotations): AnnotationCollection
     {
-        $collection = new AnnotationCollection();
+        $collection = new static();
         $collection->addCollection($annotations);
 
         return $collection;
@@ -205,7 +205,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
     {
         $added = 0;
         foreach ($annotations as $annotation) {
-            $added += (int)$this->doAdd($annotation);
+            $added += $this->doAdd($annotation);
         }
 
         return $added;
@@ -230,7 +230,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
                 continue;
             }
 
-            $added += (int)$this->doAdd($element);
+            $added += $this->doAdd($element);
         }
 
         return $added;

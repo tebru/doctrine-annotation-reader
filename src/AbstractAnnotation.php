@@ -59,7 +59,7 @@ abstract class AbstractAnnotation
 
     /**
      * Returns the name the annotation should be referenced by, defaults
-     * to classname
+     * to class name
      *
      * @return string
      */
@@ -86,8 +86,9 @@ abstract class AbstractAnnotation
      * Assert that the key exists in the data array
      *
      * @param string $key
+     * @return void
      */
-    protected function assertKey(string $key = 'value')
+    protected function assertKey(string $key = 'value'): void
     {
         if (!isset($this->data[$key])) {
             throw new RuntimeException(sprintf(
