@@ -101,7 +101,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
             return null;
         }
 
-        if (!is_array($this->annotations[$name])) {
+        if (!\is_array($this->annotations[$name])) {
             throw new RuntimeException(sprintf('Only one annotation available for "%s". Use get() instead.', $name));
         }
 
@@ -224,7 +224,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
     {
         $added = 0;
         foreach ($collection as $element) {
-            if (is_array($element)) {
+            if (\is_array($element)) {
                 $added += $this->addArray($element);
 
                 continue;
@@ -263,7 +263,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      */
     public function count(): int
     {
-        return count($this->annotations);
+        return \count($this->annotations);
     }
 
     /**
@@ -276,7 +276,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      */
     private function doAdd($annotation): int
     {
-        if (is_array($annotation)) {
+        if (\is_array($annotation)) {
             return $this->addArray($annotation);
         }
 
