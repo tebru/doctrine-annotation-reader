@@ -83,7 +83,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
         }
 
         if (!$this->annotations[$name] instanceof AbstractAnnotation) {
-            throw new RuntimeException(sprintf('Multiple values available for "%s". Use getAll() instead.', $name));
+            throw new RuntimeException(\sprintf('Multiple values available for "%s". Use getAll() instead.', $name));
         }
 
         return $this->annotations[$name];
@@ -102,7 +102,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
         }
 
         if (!\is_array($this->annotations[$name])) {
-            throw new RuntimeException(sprintf('Only one annotation available for "%s". Use get() instead.', $name));
+            throw new RuntimeException(\sprintf('Only one annotation available for "%s". Use get() instead.', $name));
         }
 
         return $this->annotations[$name];
@@ -159,7 +159,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
         try {
             $annotation = $this->get($name);
         } catch (RuntimeException $exception) {
-            throw new RuntimeException(sprintf('Multiple values available for "%s". Use removeAll() instead.', $name));
+            throw new RuntimeException(\sprintf('Multiple values available for "%s". Use removeAll() instead.', $name));
         }
 
         unset($this->annotations[$name]);
@@ -184,7 +184,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
         try {
             $annotations = $this->getAll($name);
         } catch (RuntimeException $exception) {
-            throw new RuntimeException(sprintf('Only one annotation available for "%s". Use remove() instead.', $name));
+            throw new RuntimeException(\sprintf('Only one annotation available for "%s". Use remove() instead.', $name));
         }
 
         unset($this->annotations[$name]);

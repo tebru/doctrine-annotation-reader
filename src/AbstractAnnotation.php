@@ -91,7 +91,7 @@ abstract class AbstractAnnotation
     protected function assertKey(string $key = 'value'): void
     {
         if (!isset($this->data[$key])) {
-            throw new RuntimeException(sprintf(
+            throw new RuntimeException(\sprintf(
                 'Default value not provided for %s annotation',
                 static::class
             ));

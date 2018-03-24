@@ -56,7 +56,7 @@ class AnnotationReaderAdapter
      */
     public function readClass(string $className, bool $useParent): AnnotationCollection
     {
-        $key = 'annotationreader.'.str_replace('\\', '', $className);
+        $key = 'annotationreader.'.\str_replace('\\', '', $className);
         $result = $this->cache->get($key);
         if ($result !== null) {
              return AnnotationCollection::createFromArray($result);
@@ -96,7 +96,7 @@ class AnnotationReaderAdapter
      */
     public function readMethod(string $methodName, string $className, bool $useClass, bool $useParent): AnnotationCollection
     {
-        $key = 'annotationreader.'.str_replace('\\', '', $className).$methodName;
+        $key = 'annotationreader.'.\str_replace('\\', '', $className).$methodName;
         $result = $this->cache->get($key);
         if ($result !== null) {
             return AnnotationCollection::createFromArray($result);
@@ -149,7 +149,7 @@ class AnnotationReaderAdapter
      */
     public function readProperty(string $propertyName, string $className, bool $useClass, bool $useParent): AnnotationCollection
     {
-        $key = 'annotationreader.'.str_replace('\\', '', $className).$propertyName;
+        $key = 'annotationreader.'.\str_replace('\\', '', $className).$propertyName;
         $result = $this->cache->get($key);
         if ($result !== null) {
             return AnnotationCollection::createFromArray($result);
