@@ -78,7 +78,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      */
     public function get(string $name): ?AbstractAnnotation
     {
-        if (!$this->exists($name)) {
+        if (!isset($this->annotations[$name])) {
             return null;
         }
 
@@ -97,7 +97,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      */
     public function getAll(string $name): ?array
     {
-        if (!$this->exists($name)) {
+        if (!isset($this->annotations[$name])) {
             return null;
         }
 
@@ -122,7 +122,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
     {
         $allowMultiple = $annotation->allowMultiple();
         $name = $annotation->getName();
-        $exists = $this->exists($name);
+        $exists = isset($this->annotations[$name]);
 
         if (!$allowMultiple && $exists) {
             return false;
@@ -152,7 +152,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      */
     public function remove(string $name): ?AbstractAnnotation
     {
-        if (!$this->exists($name)) {
+        if (!isset($this->annotations[$name])) {
             return null;
         }
 
@@ -177,7 +177,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      */
     public function removeAll(string $name): ?array
     {
-        if (!$this->exists($name)) {
+        if (!isset($this->annotations[$name])) {
             return null;
         }
 
