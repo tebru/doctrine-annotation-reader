@@ -20,12 +20,12 @@ abstract class AbstractAnnotation
     /**
      * @var array
      */
-    protected $data;
+    public $data;
 
     /**
      * @var mixed
      */
-    protected $value;
+    public $value;
 
     /**
      * Constructor

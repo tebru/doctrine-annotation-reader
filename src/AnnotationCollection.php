@@ -29,7 +29,7 @@ class AnnotationCollection implements IteratorAggregate, Countable
      *
      * @var AbstractAnnotation[]|AbstractAnnotation[][]
      */
-    private $annotations = [];
+    public $annotations = [];
 
     /**
      * Create new collection from array
