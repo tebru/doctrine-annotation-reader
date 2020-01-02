@@ -6,13 +6,13 @@
 
 namespace Tebru\AnnotationReader\Test;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Tebru\AnnotationReader\AnnotationCollection;
 use Tebru\AnnotationReader\Test\Mock\Annotation\BaseClassAnnotation;
 use Tebru\AnnotationReader\Test\Mock\Annotation\MultipleAllowedAnnotation;
 
-class AnnotationCollectionTest extends PHPUnit_Framework_TestCase
+class AnnotationCollectionTest extends TestCase
 {
     /**
      * @var AnnotationCollection

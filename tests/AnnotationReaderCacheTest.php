@@ -7,13 +7,14 @@
 namespace Tebru\AnnotationReader\Test;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\CacheInterface;
-use Symfony\Component\Cache\Simple\ArrayCache;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 use Tebru\AnnotationReader\AnnotationReaderAdapter;
 use Tebru\AnnotationReader\Test\Mock\Annotation\BaseClassAnnotation;
 
-class AnnotationReaderCacheTest extends PHPUnit_Framework_TestCase
+class AnnotationReaderCacheTest extends TestCase
 {
     /**
      * @var CacheInterface
@@ -27,7 +28,7 @@ class AnnotationReaderCacheTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->cache = new ArrayCache();
+        $this->cache = new Psr16Cache(new ArrayAdapter());
         $this->reader = new AnnotationReaderAdapter(new AnnotationReader(), $this->cache);
     }
 
